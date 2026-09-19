@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS alertas (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    mensaje VARCHAR(255) NOT NULL,
+    tipo VARCHAR(50) NOT NULL,
+    leida BOOLEAN DEFAULT FALSE,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    usuario_id INT,
+    FOREIGN KEY (usuario_id) REFERENCES usuarios(id)
+);

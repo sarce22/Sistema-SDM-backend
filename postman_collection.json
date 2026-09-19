@@ -1,0 +1,494 @@
+{
+	"info": {
+		"_postman_id": "b3e0c4a4-569b-43d9-a419-482a0d0a7a00",
+		"name": "SistemaSDM",
+		"description": "Colección de endpoints para el Sistema de Restaurante SDM",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Auth",
+			"item": [
+				{
+					"name": "Login (Admin)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\": \"admin\",\n    \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Chef)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\": \"chef1\",\n    \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login (Mesera)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"usuario\": \"mesera1\",\n    \"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/auth/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"auth",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:3000/api/health",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "3000",
+					"path": [
+						"api",
+						"health"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Meseras",
+			"item": [
+				{
+					"name": "Listar Items",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/meseras",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meseras"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Agregar Item",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Cerveza Corona\",\n    \"descripcion\": \"Botella 355ml\",\n    \"cantidad\": 10,\n    \"precio\": 45.50\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/meseras",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meseras"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 12,\n    \"precio\": 50.00\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/meseras/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meseras",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/meseras/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"meseras",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Chef (Inventario)",
+			"item": [
+				{
+					"name": "Pescados",
+					"item": [
+						{
+							"name": "Listar Pescados",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/chef/pescados",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chef",
+										"pescados"
+									]
+								}
+							}
+						},
+						{
+							"name": "Agregar Pescado",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Salmón\",\n    \"cantidad\": 5,\n    \"unidad_medida\": \"kg\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/chef/pescados",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chef",
+										"pescados"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Verduras",
+					"item": [
+						{
+							"name": "Listar Verduras",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									}
+								],
+								"url": {
+									"raw": "http://localhost:3000/api/chef/verduras",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chef",
+										"verduras"
+									]
+								}
+							}
+						},
+						{
+							"name": "Agregar Verdura",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Authorization",
+										"value": "Bearer {{token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"nombre\": \"Zanahoria\",\n    \"cantidad\": 100,\n    \"unidad_medida\": \"unidades\"\n}"
+								},
+								"url": {
+									"raw": "http://localhost:3000/api/chef/verduras",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"api",
+										"chef",
+										"verduras"
+									]
+								}
+							}
+						}
+					]
+				},
+				{
+					"name": "Editar Item",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"cantidad\": 12,\n    \"unidad_medida\": \"kg\"\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/chef/item/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"chef",
+								"item",
+								"1"
+							]
+						}
+					}
+				},
+				{
+					"name": "Eliminar Item",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/chef/item/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"chef",
+								"item",
+								"1"
+							]
+						}
+					}
+				}
+			]
+		},
+		{
+			"name": "Admin (Alertas)",
+			"item": [
+				{
+					"name": "Listar Alertas",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/alertas",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"alertas"
+							]
+						}
+					}
+				},
+				{
+					"name": "Marcar Alerta como Leída",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/alertas/1/leida",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"alertas",
+								"1",
+								"leida"
+							]
+						}
+					}
+				}
+			]
+		}
+	]
+}
