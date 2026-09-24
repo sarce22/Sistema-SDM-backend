@@ -9,7 +9,7 @@ require('dotenv').config();
  * Se configura utilizando las variables de entorno para mayor seguridad.
  * @type {mysql.Pool}
  */
-const pool = mysql.createPool({
+const poolConfig = {
     host: process.env.DB_HOST || '127.0.0.1',
     port: process.env.DB_PORT || 3306,
     user: process.env.DB_USER || 'root',
@@ -18,6 +18,13 @@ const pool = mysql.createPool({
     waitForConnections: true,
     connectionLimit: 10,
     queueLimit: 0
-});
+};
+
+// TiDB Cloud y proveedores en la nube requieren SSL/TLS
+if (process.env.DB_SSL === 'true' || (process.env.DB_HOST && !process.env.DB_HOST.includes('localhost') && !process.env.DB_HOST.includes('127.0.0.1'))) {
+    poolConfig.ssl = { minVersion: 'TLSv1.2', rejectUnauthorized: true };
+}
+
+const pool = mysql.createPool(poolConfig);
 
 module.exports = pool;
