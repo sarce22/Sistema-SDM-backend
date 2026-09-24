@@ -32,36 +32,19 @@
 
 </div>
 
-### Diagrama de Flujo de Datos
+### Diagrama de Arquitectura de Despliegue y Flujo (Generado con Archify)
 
-```mermaid
-flowchart TD
-    Client["🌐 Frontend / Cliente HTTP"] -->|"Bearer Token (JWT)"| Gateway["⚡ Express Server (:3000)"]
-    
-    subgraph Seguridad & Middlewares
-        Gateway --> AuthMiddle["🛡️ authMiddleware.js"]
-        AuthMiddle -->|"Valida JWT"| RBAC["🔑 Control de Acceso (Admin / Chef / Mesera)"]
-    end
-    
-    subgraph Controladores de Dominio
-        RBAC --> AuthCtrl["🔐 Auth Controller"]
-        RBAC --> ChefCtrl["🍳 Chef Inventory"]
-        RBAC --> MeseraCtrl["🍷 Mesera Inventory"]
-        RBAC --> PropinasCtrl["💰 Motor de Propinas"]
-        RBAC --> UsersCtrl["👥 Usuarios & Sedes"]
-        RBAC --> AlertasCtrl["🔔 Alertas en Tiempo Real"]
-        RBAC --> EmailCtrl["📧 Notificaciones SMTP"]
-    end
-    
-    subgraph Persistencia y Servicios Externos
-        ChefCtrl --> MySQL[("🐬 MySQL 8.0 (Docker)")]
-        MeseraCtrl --> MySQL
-        PropinasCtrl --> MySQL
-        UsersCtrl --> MySQL
-        AlertasCtrl --> MySQL
-        EmailCtrl --> Nodemailer["📨 Servidor SMTP (Nodemailer)"]
-    end
-```
+La topología de infraestructura, fronteras de red y ciclo de peticiones han sido modelados y verificados con **[Archify](https://github.com/tt-a1i/archify)**, garantizando una arquitectura desacoplada, segura y con límites de servicio definidos:
+
+<div align="center">
+
+| Modo Oscuro | Modo Claro |
+| :---: | :---: |
+| ![Arquitectura SistemaSDM Modo Oscuro](docs/assets/architecture_dark.png) | ![Arquitectura SistemaSDM Modo Claro](docs/assets/architecture_light.png) |
+
+> 💡 **Diagrama Interactivo:** Puedes explorar el lienzo dinámico con soporte de Zoom, Pan, trazado de dependencias y vistas guiadas abriendo [`docs/sistemasdm-arquitectura.html`](docs/sistemasdm-arquitectura.html) en tu navegador.
+
+</div>
 
 ---
 
