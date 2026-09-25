@@ -39,4 +39,23 @@ app.get('/api/health', (req, res) => {
     res.json({ status: 'ok', message: 'Servidor funcionando correctamente' });
 });
 
+/**
+ * @route GET /api/health/db
+ * @description Endpoint de diagnóstico para verificar la conexión activa a la base de datos.
+ */
+app.get('/api/health/db', async (req, res) => {
+    try {
+        const pool = require('./config/db');
+        const [rows] = await pool.execute('SELECT 1 as connected');
+        res.json({ status: 'ok', database: 'connected', result: rows[0] });
+    } catch (error) {
+        console.error('Error de conexión a la BD:', error);
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+            code: error.code || 'UNKNOWN'
+        });
+    }
+});
+
 module.exports = app;
