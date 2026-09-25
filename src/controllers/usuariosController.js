@@ -42,7 +42,7 @@ exports.getUsuarios = async (req, res) => {
  */
 exports.crearUsuario = async (req, res) => {
     try {
-        const { usuario, nombre, password, rol } = req.body;
+        const { usuario, nombre, password, rol, sede_id } = req.body;
         // Si no mandan nombre, usamos el usuario como nombre por defecto
         const nombreFinal = nombre || usuario;
         
@@ -52,9 +52,14 @@ exports.crearUsuario = async (req, res) => {
         if (existente.length > 0) return res.status(400).json({ error: 'El nombre de usuario ya está en uso' });
         
         const hash = await bcrypt.hash(password, 10);
-        const [result] = await db.execute('INSERT INTO usuarios (usuario, nombre, password, rol) VALUES (?, ?, ?, ?)', [usuario, nombreFinal, hash, rol]);
+        const sedeFinal = sede_id || (req.user?.rol === 'Admin' ? (req.query.sede_id || 1) : req.user?.sede_id || 1);
+
+        const [result] = await db.execute(
+            'INSERT INTO usuarios (usuario, nombre, password, rol, sede_id) VALUES (?, ?, ?, ?, ?)',
+            [usuario, nombreFinal, hash, rol, sedeFinal]
+        );
         
-        res.status(201).json({ id: result.insertId, usuario, nombre: nombreFinal, rol, message: 'Usuario creado exitosamente' });
+        res.status(201).json({ id: result.insertId, usuario, nombre: nombreFinal, rol, sede_id: sedeFinal, message: 'Usuario creado exitosamente' });
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Error al crear usuario' });
@@ -92,7 +97,7 @@ exports.eliminarUsuario = async (req, res) => {
 exports.editarUsuario = async (req, res) => {
     try {
         const { id } = req.params;
-        const { usuario, nombre, password, rol } = req.body;
+        const { usuario, nombre, password, rol, sede_id } = req.body;
         
         if (!usuario || !rol) return res.status(400).json({ error: 'El nombre de usuario y el rol son obligatorios' });
         
@@ -104,9 +109,17 @@ exports.editarUsuario = async (req, res) => {
 
         if (password) {
             const hash = await bcrypt.hash(password, 10);
-            await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, password = ?, rol = ? WHERE id = ?', [usuario, nombreFinal, hash, rol, id]);
+            if (sede_id) {
+                await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, password = ?, rol = ?, sede_id = ? WHERE id = ?', [usuario, nombreFinal, hash, rol, sede_id, id]);
+            } else {
+                await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, password = ?, rol = ? WHERE id = ?', [usuario, nombreFinal, hash, rol, id]);
+            }
         } else {
-            await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, rol = ? WHERE id = ?', [usuario, nombreFinal, rol, id]);
+            if (sede_id) {
+                await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, rol = ?, sede_id = ? WHERE id = ?', [usuario, nombreFinal, rol, sede_id, id]);
+            } else {
+                await db.execute('UPDATE usuarios SET usuario = ?, nombre = ?, rol = ? WHERE id = ?', [usuario, nombreFinal, rol, id]);
+            }
         }
         
         res.json({ message: 'Usuario actualizado exitosamente' });

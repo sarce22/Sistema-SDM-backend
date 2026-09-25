@@ -31,4 +31,14 @@ if (process.env.DB_SSL === 'true' || (process.env.DB_HOST && !process.env.DB_HOS
 
 const pool = mysql.createPool(poolConfig);
 
+// Auto-verificación y adición de columnas requeridas en la base de datos
+(async () => {
+    try {
+        await pool.execute("ALTER TABLE inventario_chef ADD COLUMN IF NOT EXISTS alerta_activada TINYINT(1) DEFAULT 0");
+    } catch (_) {}
+    try {
+        await pool.execute("ALTER TABLE items_mesera ADD COLUMN IF NOT EXISTS alerta_activada TINYINT(1) DEFAULT 0");
+    } catch (_) {}
+})();
+
 module.exports = pool;
