@@ -6,10 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const meseraController = require('../controllers/meseraController');
-const { verificarToken, verificarRolMeseraOAdmin } = require('../middlewares/authMiddleware');
+const { verificarToken, verificarRolMeseraOAdmin, verificarModuloSede } = require('../middlewares/authMiddleware');
 
 // Validar en todas las rutas de este router
-router.use(verificarToken, verificarRolMeseraOAdmin);
+router.use(verificarToken, verificarRolMeseraOAdmin, verificarModuloSede('mod_meseras'));
 
 router.get('/', meseraController.listarItems);
 router.post('/', meseraController.agregarItem);

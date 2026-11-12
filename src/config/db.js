@@ -39,6 +39,16 @@ const pool = mysql.createPool(poolConfig);
     try {
         await pool.execute("ALTER TABLE items_mesera ADD COLUMN IF NOT EXISTS alerta_activada TINYINT(1) DEFAULT 0");
     } catch (_) {}
+    const columnasSede = ['mod_meseras', 'mod_chef', 'mod_alertas', 'mod_propinas', 'mod_accesos'];
+    for (const col of columnasSede) {
+        try {
+            await pool.execute(`ALTER TABLE sedes ADD COLUMN IF NOT EXISTS ${col} TINYINT(1) DEFAULT 1`);
+        } catch (_) {
+            try {
+                await pool.execute(`ALTER TABLE sedes ADD COLUMN ${col} TINYINT(1) DEFAULT 1`);
+            } catch (__) {}
+        }
+    }
 })();
 
 module.exports = pool;

@@ -13,6 +13,7 @@ const propinasRoutes = require('./routes/propinasRoutes');
 const usuariosRoutes = require('./routes/usuariosRoutes');
 const emailRoutes = require('./routes/emailRoutes');
 const asignacionesRoutes = require('./routes/asignacionesRoutes');
+const sedesRoutes = require('./routes/sedesRoutes');
 
 const app = express();
 
@@ -22,6 +23,7 @@ app.use(express.json());
 
 // Rutas
 app.use('/api/auth', authRoutes);
+app.use('/api/sedes', sedesRoutes);
 app.use('/api/meseras', meseraRoutes);
 app.use('/api/chef', chefRoutes);
 app.use('/api/alertas', alertaRoutes);

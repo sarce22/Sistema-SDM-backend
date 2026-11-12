@@ -6,10 +6,11 @@
 const express = require('express');
 const router = express.Router();
 const usuariosController = require('../controllers/usuariosController');
-const { verificarToken, verificarRolAdmin } = require('../middlewares/authMiddleware');
+const { verificarToken, verificarRolAdmin, verificarModuloSede } = require('../middlewares/authMiddleware');
 
 router.use(verificarToken);
 router.use(verificarRolAdmin);
+router.use(verificarModuloSede('mod_accesos'));
 
 router.get('/', usuariosController.getUsuarios);
 router.post('/', usuariosController.crearUsuario);

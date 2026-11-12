@@ -6,10 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const alertaController = require('../controllers/alertaController');
-const { verificarToken, verificarRolAdmin } = require('../middlewares/authMiddleware');
+const { verificarToken, verificarRolAdmin, verificarModuloSede } = require('../middlewares/authMiddleware');
 
 // Solo el Admin puede ver y manejar las alertas
-router.use(verificarToken, verificarRolAdmin);
+router.use(verificarToken, verificarRolAdmin, verificarModuloSede('mod_alertas'));
 
 router.get('/', alertaController.listarAlertas);
 router.get('/count/unread', alertaController.contarNoLeidas);

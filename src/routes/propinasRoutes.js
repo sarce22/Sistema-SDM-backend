@@ -6,10 +6,11 @@
 const express = require('express');
 const router = express.Router();
 const propinasController = require('../controllers/propinasController');
-const { verificarToken, verificarRolMeseraOAdmin } = require('../middlewares/authMiddleware');
+const { verificarToken, verificarRolMeseraOAdmin, verificarModuloSede } = require('../middlewares/authMiddleware');
 
 router.use(verificarToken);
 router.use(verificarRolMeseraOAdmin);
+router.use(verificarModuloSede('mod_propinas'));
 
 router.get('/', propinasController.getSemanas);
 router.post('/', propinasController.createSemana);

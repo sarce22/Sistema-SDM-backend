@@ -489,6 +489,155 @@
 					}
 				}
 			]
+		},
+		{
+			"name": "Sedes (Dinámicas)",
+			"item": [
+				{
+					"name": "Listar Sedes",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/sedes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"sedes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Obtener Sede por ID",
+					"request": {
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/sedes/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"sedes",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Crear Sede (Con Módulos Personalizados)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Sede Express\",\n    \"mod_meseras\": 1,\n    \"mod_chef\": 1,\n    \"mod_alertas\": 0,\n    \"mod_propinas\": 0,\n    \"mod_accesos\": 0\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/sedes",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"sedes"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Editar Sede y Módulos",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							},
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nombre\": \"Sede Express Sur\",\n    \"mod_meseras\": 1,\n    \"mod_chef\": 1,\n    \"mod_alertas\": 1,\n    \"mod_propinas\": 1,\n    \"mod_accesos\": 1\n}"
+						},
+						"url": {
+							"raw": "http://localhost:3000/api/sedes/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"sedes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Eliminar Sede",
+					"request": {
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}"
+							}
+						],
+						"url": {
+							"raw": "http://localhost:3000/api/sedes/3",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"api",
+								"sedes",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
 		}
 	]
 }

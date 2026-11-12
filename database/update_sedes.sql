@@ -1,9 +1,20 @@
 CREATE TABLE IF NOT EXISTS sedes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(100) NOT NULL,
+    mod_meseras TINYINT(1) DEFAULT 1,
+    mod_chef TINYINT(1) DEFAULT 1,
+    mod_alertas TINYINT(1) DEFAULT 1,
+    mod_propinas TINYINT(1) DEFAULT 1,
+    mod_accesos TINYINT(1) DEFAULT 1
 );
 
-INSERT IGNORE INTO sedes (id, nombre) VALUES (1, 'Sede Centro'), (2, 'Sede Norte');
+ALTER TABLE sedes ADD COLUMN IF NOT EXISTS mod_meseras TINYINT(1) DEFAULT 1;
+ALTER TABLE sedes ADD COLUMN IF NOT EXISTS mod_chef TINYINT(1) DEFAULT 1;
+ALTER TABLE sedes ADD COLUMN IF NOT EXISTS mod_alertas TINYINT(1) DEFAULT 1;
+ALTER TABLE sedes ADD COLUMN IF NOT EXISTS mod_propinas TINYINT(1) DEFAULT 1;
+ALTER TABLE sedes ADD COLUMN IF NOT EXISTS mod_accesos TINYINT(1) DEFAULT 1;
+
+INSERT IGNORE INTO sedes (id, nombre, mod_meseras, mod_chef, mod_alertas, mod_propinas, mod_accesos) VALUES (1, 'Sede Centro', 1, 1, 1, 1, 1), (2, 'Sede Norte', 1, 1, 1, 1, 1);
 
 -- Añadir sede_id a las tablas existentes (por defecto Sede 1)
 ALTER TABLE usuarios ADD COLUMN sede_id INT DEFAULT 1;

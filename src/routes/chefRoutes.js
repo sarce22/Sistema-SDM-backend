@@ -6,10 +6,10 @@
 const express = require('express');
 const router = express.Router();
 const chefController = require('../controllers/chefController');
-const { verificarToken, verificarRolChefOAdmin } = require('../middlewares/authMiddleware');
+const { verificarToken, verificarRolChefOAdmin, verificarModuloSede } = require('../middlewares/authMiddleware');
 
 // Validar en todas las rutas de este router
-router.use(verificarToken, verificarRolChefOAdmin);
+router.use(verificarToken, verificarRolChefOAdmin, verificarModuloSede('mod_chef'));
 
 // Las rutas esperan una categoría (verduras o pescados)
 router.get('/:categoria', chefController.listarItems);

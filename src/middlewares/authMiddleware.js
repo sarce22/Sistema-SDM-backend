@@ -92,3 +92,34 @@ exports.verificarRolAdmin = (req, res, next) => {
         res.status(403).json({ error: 'Acceso denegado. Se requieren privilegios de Administrador.' });
     }
 };
+
+/**
+ * Middleware generador que verifica si un módulo específico está habilitado en la sede activa de la petición.
+ * Si el módulo está desactivado (0) en la sede, responde con HTTP 403 Forbidden.
+ *
+ * @param {'mod_meseras'|'mod_chef'|'mod_alertas'|'mod_propinas'|'mod_accesos'} nombreModulo - Columna del módulo a validar.
+ * @returns {import('express').RequestHandler} Middleware de Express.
+ */
+exports.verificarModuloSede = (nombreModulo) => {
+    return async (req, res, next) => {
+        try {
+            const sedesController = require('../controllers/sedesController');
+            const sedeId = req.user?.rol === 'Admin'
+                ? (req.query?.sede_id || req.body?.sede_id || req.user?.sede_id || 1)
+                : (req.user?.sede_id || 1);
+
+            const configSede = await sedesController.obtenerConfigSede(sedeId);
+
+            if (configSede && Number(configSede[nombreModulo]) === 0) {
+                return res.status(403).json({
+                    error: `El módulo solicitado no está habilitado en la sede "${configSede.nombre}".`
+                });
+            }
+
+            next();
+        } catch (error) {
+            console.error('Error verificando módulo de sede:', error);
+            next();
+        }
+    };
+};

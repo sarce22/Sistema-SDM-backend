@@ -11,12 +11,18 @@ USE sistemasdm;
 -- 1. Tabla de Sedes
 CREATE TABLE IF NOT EXISTS sedes (
     id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL
+    nombre VARCHAR(100) NOT NULL,
+    mod_meseras TINYINT(1) DEFAULT 1,
+    mod_chef TINYINT(1) DEFAULT 1,
+    mod_alertas TINYINT(1) DEFAULT 1,
+    mod_propinas TINYINT(1) DEFAULT 1,
+    mod_accesos TINYINT(1) DEFAULT 1
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-INSERT IGNORE INTO sedes (id, nombre) VALUES 
-(1, 'Sede Centro'), 
-(2, 'Sede Norte');
+INSERT IGNORE INTO sedes (id, nombre, mod_meseras, mod_chef, mod_alertas, mod_propinas, mod_accesos) VALUES 
+(1, 'Sede Centro', 1, 1, 1, 1, 1), 
+(2, 'Sede Norte', 1, 1, 1, 1, 1),
+(3, 'Sede Express Chapinero', 1, 1, 0, 0, 0);
 
 -- 2. Tabla de Usuarios del Sistema
 CREATE TABLE IF NOT EXISTS usuarios (
@@ -29,11 +35,24 @@ CREATE TABLE IF NOT EXISTS usuarios (
     FOREIGN KEY (sede_id) REFERENCES sedes(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- Semilla de usuarios (Contraseña por defecto para todos: '123456' encriptada con bcrypt)
+-- Semilla de usuarios (Contraseña/PIN por defecto para todos: '123456' encriptada con bcrypt)
 INSERT IGNORE INTO usuarios (id, usuario, nombre, password, rol, sede_id) VALUES 
-(1, 'admin', 'Administrador General', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Admin', 1),
-(2, 'chef1', 'Carlos Cocina', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 1),
-(3, 'mesera1', 'Ana Servicio', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1);
+(1, 'admin', 'Sebastián Martínez (Admin)', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Admin', 1),
+(2, 'chef1', 'Carlos Andrés Ramírez', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 1),
+(3, 'mesera1', 'Valentina Ospina', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1),
+(4, 'diego.cocina', 'Diego Fernando Herrera', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 1),
+(5, 'luisa.cocina', 'Luisa Fernanda Ríos', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 2),
+(6, 'miguel.cocina', 'Miguel Ángel Castro', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 2),
+(7, 'andres.cocina', 'Andrés Felipe Mora', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Chef', 3),
+(8, 'Camila', 'Camila Andrea Vargas', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1),
+(9, 'santiago.m', 'Santiago Mejía López', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1),
+(10, 'daniela.m', 'Daniela Alejandra Parra', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1),
+(11, 'mariana.m', 'Mariana Restrepo Díaz', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 1),
+(12, 'laura.m', 'Laura Sofía Mendoza', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 2),
+(13, 'mateo.m', 'Mateo Cano Salazar', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 2),
+(14, 'paula.m', 'Paula Andrea Quintero', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 2),
+(15, 'nicolas.m', 'Nicolás Pineda Gómez', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 2),
+(16, 'natalia.m', 'Natalia Giraldo Vélez', '$2b$10$eEA9xSuecRYihtwn5P6aouAki7jTmNx6Aqjgej50CDIWZ.DEEUDgu', 'Mesera', 3);
 
 -- 3. Tabla de Inventario de Cocina (Chef)
 CREATE TABLE IF NOT EXISTS inventario_chef (

@@ -14,6 +14,11 @@ const db = require('../config/db');
  */
 exports.crearAlertaInterna = async (mensaje, tipo, usuario_id, sede_id = 1) => {
     try {
+        const sedesController = require('./sedesController');
+        const configSede = await sedesController.obtenerConfigSede(sede_id);
+        if (configSede && Number(configSede.mod_alertas) === 0) {
+            return;
+        }
         await db.execute(
             'INSERT INTO alertas (mensaje, tipo, usuario_id, sede_id) VALUES (?, ?, ?, ?)',
             [mensaje, tipo, usuario_id || null, sede_id]
