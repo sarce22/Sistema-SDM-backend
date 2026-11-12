@@ -49,6 +49,20 @@ const pool = mysql.createPool(poolConfig);
             } catch (__) {}
         }
     }
+    const columnasAsignaciones = [
+        "horario VARCHAR(100) DEFAULT '11:00 AM - 8:00 PM'",
+        "dias_trabajo TEXT",
+        "dia_libre VARCHAR(50) DEFAULT 'Lunes'"
+    ];
+    for (const colDef of columnasAsignaciones) {
+        try {
+            await pool.execute(`ALTER TABLE asignaciones_diarias ADD COLUMN IF NOT EXISTS ${colDef}`);
+        } catch (_) {
+            try {
+                await pool.execute(`ALTER TABLE asignaciones_diarias ADD COLUMN ${colDef}`);
+            } catch (__) {}
+        }
+    }
 })();
 
 module.exports = pool;

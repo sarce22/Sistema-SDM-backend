@@ -1,12 +1,23 @@
 const db = require('../config/db');
 
+const DIAS_POR_DEFECTO = ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
+
+const parsearDias = (raw) => {
+    if (!raw) return [...DIAS_POR_DEFECTO];
+    if (Array.isArray(raw)) return raw;
+    try {
+        const parsed = JSON.parse(raw);
+        return Array.isArray(parsed) ? parsed : [...DIAS_POR_DEFECTO];
+    } catch {
+        return [...DIAS_POR_DEFECTO];
+    }
+};
+
 exports.obtenerAsignaciones = async (req, res) => {
     try {
         // Usamos una fecha constante para representar el estado actual permanente
         const fechaConstante = '2000-01-01';
 
-        // Obtener todos los trabajadores activos y hacer LEFT JOIN con asignaciones_diarias para la fecha indicada
-        // También hacer JOIN con sedes para traer el nombre de la sede si aplica.
         const query = `
             SELECT 
                 u.id AS trabajador_id, 
@@ -15,6 +26,9 @@ exports.obtenerAsignaciones = async (req, res) => {
                 u.sede_id AS sede_defecto,
                 ad.sede_id AS sede_asignada,
                 ad.fijado,
+                ad.horario,
+                ad.dias_trabajo,
+                ad.dia_libre,
                 s.nombre AS nombre_sede_asignada
             FROM usuarios u
             LEFT JOIN asignaciones_diarias ad 
@@ -26,10 +40,12 @@ exports.obtenerAsignaciones = async (req, res) => {
         `;
         const [rows] = await db.execute(query, [fechaConstante]);
 
-        // Convertir fijado a booleano para el frontend
         const asignaciones = rows.map(r => ({
             ...r,
-            fijado: r.fijado === 1
+            fijado: r.fijado === 1,
+            horario: r.horario || '11:00 AM - 8:00 PM',
+            dias_trabajo: parsearDias(r.dias_trabajo),
+            dia_libre: r.dia_libre || 'Lunes'
         }));
 
         res.json({ asignaciones });
@@ -48,37 +64,39 @@ exports.guardarAsignaciones = async (req, res) => {
             return res.status(400).json({ error: 'Faltan datos requeridos (asignaciones)' });
         }
 
-        // Para evitar problemas, primero podemos eliminar las asignaciones de ese día 
-        // (o hacer INSERT ON DUPLICATE KEY UPDATE)
-        
-        // Empecemos la transacción
         const connection = await db.getConnection();
         await connection.beginTransaction();
 
         try {
             for (const asig of asignaciones) {
-                const { trabajador_id, sede_id } = asig;
-                
-                // Si sede_id es null, "eliminar" la asignación
-                if (sede_id === null) {
-                    await connection.execute(
-                        'DELETE FROM asignaciones_diarias WHERE usuario_id = ? AND fecha = ?',
-                        [trabajador_id, fechaConstante]
-                    );
-                } else {
-                    // Actualizar o insertar, incluyendo el estado de fijado
-                    const fijadoVal = asig.fijado ? 1 : 0;
-                    await connection.execute(
-                        `INSERT INTO asignaciones_diarias (usuario_id, sede_id, fecha, fijado) 
-                         VALUES (?, ?, ?, ?) 
-                         ON DUPLICATE KEY UPDATE sede_id = VALUES(sede_id), fijado = VALUES(fijado)`,
-                        [trabajador_id, sede_id, fechaConstante, fijadoVal]
-                    );
-                }
+                const {
+                    trabajador_id,
+                    sede_id,
+                    fijado,
+                    horario = '11:00 AM - 8:00 PM',
+                    dias_trabajo = DIAS_POR_DEFECTO,
+                    dia_libre = 'Lunes'
+                } = asig;
+
+                const fijadoVal = fijado ? 1 : 0;
+                const diasStr = Array.isArray(dias_trabajo) ? JSON.stringify(dias_trabajo) : JSON.stringify(DIAS_POR_DEFECTO);
+
+                // Guardamos siempre el registro (incluso si sede_id es null) para conservar su horario, días y día libre
+                await connection.execute(
+                    `INSERT INTO asignaciones_diarias (usuario_id, sede_id, fecha, fijado, horario, dias_trabajo, dia_libre) 
+                     VALUES (?, ?, ?, ?, ?, ?, ?) 
+                     ON DUPLICATE KEY UPDATE 
+                        sede_id = VALUES(sede_id), 
+                        fijado = VALUES(fijado),
+                        horario = VALUES(horario),
+                        dias_trabajo = VALUES(dias_trabajo),
+                        dia_libre = VALUES(dia_libre)`,
+                    [trabajador_id, sede_id ?? null, fechaConstante, fijadoVal, horario, diasStr, dia_libre]
+                );
             }
             
             await connection.commit();
-            res.json({ message: 'Asignaciones guardadas correctamente' });
+            res.json({ message: 'Asignaciones y turnos guardados correctamente' });
         } catch (err) {
             await connection.rollback();
             throw err;

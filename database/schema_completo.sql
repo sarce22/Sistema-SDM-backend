@@ -96,13 +96,16 @@ CREATE TABLE IF NOT EXISTS alertas (
     FOREIGN KEY (sede_id) REFERENCES sedes(id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- 6. Tabla de Asignaciones Diarias (Tablero Kanban de Personal)
+-- 6. Tabla de Asignaciones Diarias (Tablero Kanban de Personal y Turnos)
 CREATE TABLE IF NOT EXISTS asignaciones_diarias (
     id INT AUTO_INCREMENT PRIMARY KEY,
     usuario_id INT NOT NULL,
     sede_id INT DEFAULT NULL,
     fecha DATE NOT NULL,
     fijado TINYINT(1) DEFAULT 0,
+    horario VARCHAR(100) DEFAULT '11:00 AM - 8:00 PM',
+    dias_trabajo TEXT,
+    dia_libre VARCHAR(50) DEFAULT 'Lunes',
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE KEY unique_asignacion (usuario_id, fecha),
     FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE,

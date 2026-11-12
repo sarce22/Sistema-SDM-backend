@@ -213,31 +213,43 @@ async function poblarDatosReales() {
 
     const asignacionesReales = [
         // Sede Centro
-        { usuario_id: getUserId('chef1'), sede_id: sedeCentroId, fijado: 1 },
-        { usuario_id: getUserId('diego.cocina'), sede_id: sedeCentroId, fijado: 0 },
-        { usuario_id: getUserId('Camila'), sede_id: sedeCentroId, fijado: 1 },
-        { usuario_id: getUserId('mesera1'), sede_id: sedeCentroId, fijado: 0 },
-        { usuario_id: getUserId('santiago.m'), sede_id: sedeCentroId, fijado: 0 },
-        { usuario_id: getUserId('daniela.m'), sede_id: sedeCentroId, fijado: 0 },
+        { usuario_id: getUserId('chef1'), sede_id: sedeCentroId, fijado: 1, horario: '09:00 AM - 05:30 PM', dias_trabajo: ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes' },
+        { usuario_id: getUserId('diego.cocina'), sede_id: sedeCentroId, fijado: 0, horario: '12:00 PM - 09:00 PM', dias_trabajo: ['Lun', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Martes' },
+        { usuario_id: getUserId('Camila'), sede_id: sedeCentroId, fijado: 1, horario: '10:30 AM - 07:30 PM', dias_trabajo: ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes' },
+        { usuario_id: getUserId('mesera1'), sede_id: sedeCentroId, fijado: 0, horario: '11:30 AM - 08:30 PM', dias_trabajo: ['Lun', 'Mar', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Miércoles' },
+        { usuario_id: getUserId('santiago.m'), sede_id: sedeCentroId, fijado: 0, horario: '01:00 PM - 10:00 PM', dias_trabajo: ['Lun', 'Mar', 'Mié', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Jueves' },
+        { usuario_id: getUserId('daniela.m'), sede_id: sedeCentroId, fijado: 0, horario: '11:00 AM - 08:00 PM', dias_trabajo: ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes' },
 
         // Sede Norte
-        { usuario_id: getUserId('luisa.cocina'), sede_id: sedeNorteId, fijado: 1 },
-        { usuario_id: getUserId('miguel.cocina'), sede_id: sedeNorteId, fijado: 0 },
-        { usuario_id: getUserId('laura.m'), sede_id: sedeNorteId, fijado: 1 },
-        { usuario_id: getUserId('mateo.m'), sede_id: sedeNorteId, fijado: 0 },
-        { usuario_id: getUserId('paula.m'), sede_id: sedeNorteId, fijado: 0 },
+        { usuario_id: getUserId('luisa.cocina'), sede_id: sedeNorteId, fijado: 1, horario: '09:00 AM - 05:30 PM', dias_trabajo: ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes' },
+        { usuario_id: getUserId('miguel.cocina'), sede_id: sedeNorteId, fijado: 0, horario: '12:30 PM - 09:30 PM', dias_trabajo: ['Lun', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Martes' },
+        { usuario_id: getUserId('laura.m'), sede_id: sedeNorteId, fijado: 1, horario: '10:30 AM - 07:30 PM', dias_trabajo: ['Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes' },
+        { usuario_id: getUserId('mateo.m'), sede_id: sedeNorteId, fijado: 0, horario: '12:00 PM - 09:00 PM', dias_trabajo: ['Lun', 'Mar', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Miércoles' },
+        { usuario_id: getUserId('paula.m'), sede_id: sedeNorteId, fijado: 0, horario: '01:00 PM - 10:00 PM', dias_trabajo: ['Lun', 'Mar', 'Mié', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Jueves' },
 
         // Sede Express Chapinero
-        { usuario_id: getUserId('andres.cocina'), sede_id: sedeExpressId, fijado: 1 },
-        { usuario_id: getUserId('natalia.m'), sede_id: sedeExpressId, fijado: 1 }
+        { usuario_id: getUserId('andres.cocina'), sede_id: sedeExpressId, fijado: 1, horario: '10:00 AM - 07:00 PM', dias_trabajo: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], dia_libre: 'Domingo' },
+        { usuario_id: getUserId('natalia.m'), sede_id: sedeExpressId, fijado: 1, horario: '10:30 AM - 07:30 PM', dias_trabajo: ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb'], dia_libre: 'Domingo' },
+
+        // Sin Asignar (Disponibles / Descanso)
+        { usuario_id: getUserId('mariana.m'), sede_id: null, fijado: 0, horario: 'En Descanso Hoy', dias_trabajo: ['Mié', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Lunes y Martes' },
+        { usuario_id: getUserId('nicolas.m'), sede_id: null, fijado: 0, horario: 'Turno Disponible (11:00 AM - 08:00 PM)', dias_trabajo: ['Mar', 'Jue', 'Vie', 'Sáb', 'Dom'], dia_libre: 'Miércoles' }
     ];
 
     for (const asig of asignacionesReales) {
         if (asig.usuario_id) {
             await db.execute(
-                `INSERT INTO asignaciones_diarias (usuario_id, sede_id, fecha, fijado)
-                 VALUES (?, ?, ?, ?)`,
-                [asig.usuario_id, asig.sede_id, fechaConstante, asig.fijado]
+                `INSERT INTO asignaciones_diarias (usuario_id, sede_id, fecha, fijado, horario, dias_trabajo, dia_libre)
+                 VALUES (?, ?, ?, ?, ?, ?, ?)`,
+                [
+                    asig.usuario_id,
+                    asig.sede_id,
+                    fechaConstante,
+                    asig.fijado,
+                    asig.horario,
+                    JSON.stringify(asig.dias_trabajo),
+                    asig.dia_libre
+                ]
             );
         }
     }
